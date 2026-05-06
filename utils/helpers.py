@@ -14,7 +14,7 @@ import threading
 import cv2
 import numpy as np
 BASE_DIR = Path(__file__).parent.parent / "data"
-from tinygrad import Tensor
+from tinygrad import Tensor, TinyJit
 
 def send_notif(session_token: str, text=None):
     host = "www.clearcam.org"
@@ -203,6 +203,14 @@ def export_and_upload(cam_name, thumbnail, userID, key, start=None, end=0, lengt
     encrypt_file(Path(mp4_filename), Path(f"""{mp4_filename}.aes"""), key)
     upload_file(Path(f"{mp4_filename}.aes"), userID)
     os.unlink(mp4_filename)
+
+def jit_infer(model, x, jit_cache):
+    shape = tuple(x.shape)
+    if shape not in jit_cache:
+        @TinyJit
+        def fn(x, model): return model(x)
+        jit_cache[shape] = fn
+    return jit_cache[shape](x, model)
 
 def find_ffmpeg():
     ffmpeg_path = shutil.which('ffmpeg')

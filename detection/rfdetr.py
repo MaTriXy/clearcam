@@ -602,7 +602,6 @@ class RFDETR():
       self.backbone.encoder.encoder.layer[i].mlp.fc2 = nn.Linear(1536, 384)
     state_dict = safe_load(fetch(f'https://huggingface.co/roryclear/rf-detr/resolve/main/{name}.safetensors'))
     load_state_dict(self, state_dict)
-    self.jit_cache = {}
 
   # todo, this should be more generic and not in both here and yolo
   def jit_infer(self, frame):

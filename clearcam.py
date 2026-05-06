@@ -27,7 +27,7 @@ from utils.db import db
 import multiprocessing
 import re
 import base64
-from utils.helpers import send_notif, find_ffmpeg, export_clip, upload_file, encrypt_file, export_and_upload
+from utils.helpers import send_notif, find_ffmpeg, export_clip, upload_file, encrypt_file, export_and_upload, jit_infer
 import pickle
 
 # RTSP URL
@@ -569,7 +569,7 @@ class VideoCapture:
 
   def run_inference(self, frame, cam_name):
     frame = Tensor(frame)
-    preds = model.jit_infer(frame).numpy()
+    preds = jit_infer(model, frame, jit_cache).numpy()
     thresh = (self.settings[cam_name].get("threshold") if self.settings[cam_name] else 0.5) or 0.5 #todo clean!
     online_targets = self.tracker[cam_name].update(preds, thresh)
     online_targets = [p for p in online_targets if (classes is None or str(int(p.class_id)) in classes)]
@@ -1345,6 +1345,7 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
         super().server_close()
 
 if __name__ == "__main__":
+  jit_cache = {}
   alerts_on = {}
   multiprocessing.set_start_method("spawn", force=True)
   database = db()
