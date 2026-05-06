@@ -263,7 +263,7 @@ class VideoCapture:
         cams = new_cams
       for cam_name in cams.keys():
         self.process_frame(cam_name=cam_name) # todo rename alerts_on?
-      if use_clip:process_queue()
+      if use_clip or use_face: process_queue()
       if len(object_queue) > 0:
         try:
           img = cv2.imread(object_queue[0])
