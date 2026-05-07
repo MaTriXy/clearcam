@@ -472,7 +472,7 @@ class VideoCapture:
                 continue
               window = alert.window if alert.window else (60 if alert.is_notif else 1)
               if alert.get_counts()[1]:
-                  if time.time() - alert.last_det >= window and (time.time() - self.last_det[cam_name] >= window):
+                  if time.time() - alert.last_det >= window and (time.time() - alert.last_det >= window):
                     timestamp = "video" if self.vod[cam_name] else datetime.now().strftime("%Y-%m-%d")
                     filepath = BASE_DIR / "cameras" / f"{cam_name}/event_images/{timestamp}"
                     filepath.mkdir(parents=True, exist_ok=True)
