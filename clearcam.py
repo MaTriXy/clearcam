@@ -932,19 +932,7 @@ class HLSRequestHandler(BaseHTTPRequestHandler):
             else:
               database.run_put("counters", cam_name, RollingClassCounter(cam_name=cam_name))
               self.send_200([])
-        
-        if parsed_path.path == "/shutdown": 
-          threading.Thread(target=self.server.shutdown).start()
-          for proc in active_subprocesses:
-            try:
-                proc.terminate()
-                proc.wait(timeout=5)
-            except:
-                try:
-                    proc.kill()
-                except:
-                    pass
-          sys.exit(0)
+      
 
         if parsed_path.path == "/reset_counts":
           if not cam_name:

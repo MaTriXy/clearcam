@@ -580,10 +580,6 @@
       background: var(--accent-hover);
     }
 
-    .shutdown-wrapper {
-      margin-top: 20px;
-    }
-
     #zoneModal button {
         padding: 8px 16px;
         background: var(--accent-primary);
@@ -1323,9 +1319,6 @@
         <input type="number" id="maxStorageInput" min="1" style="width: 120px;">
         <button type="button" id="setMaxStorageBtn">Set</button>
       </div>
-    </div>
-    <div class="shutdown-wrapper">
-      <button class="shutdown-button" onclick="shutdownServer()">Shutdown Server</button>
     </div>
   </div>
 
@@ -2764,20 +2757,6 @@
         fetchCameras();
       } else {
         alert("Failed to delete camera.");
-      }
-    }
-
-    async function shutdownServer() {
-      if (!confirm("Are you sure you want to shut down the server?")) return;
-      activeVideoStreams.forEach((stream, camName) => {
-        cleanupCameraStream(camName);
-      });
-      
-      const res = await fetch('/shutdown');
-      if (res.ok) {
-        alert("Server is shutting down...");
-      } else {
-        alert("Shutdown failed.");
       }
     }
 
